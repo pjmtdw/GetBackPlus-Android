@@ -1,4 +1,5 @@
 .gradle/
 .project
 app/build/
+app/keystore.gradle
 build/
