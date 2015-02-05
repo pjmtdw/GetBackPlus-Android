@@ -5,11 +5,10 @@
   android:focusableInTouchMode="true" android:focusable="true"
   >
 
-  <EditText
+  <TextView
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:id="@+id/latlng"
-    android:digits="0123456789.,"
     />
   <Button
     android:layout_width="fill_parent"

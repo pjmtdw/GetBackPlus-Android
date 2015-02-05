@@ -9,7 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.getpebble.android.kit.PebbleKit;
@@ -39,11 +39,14 @@ public class GetBackPlusActivity extends Activity {
       if(intent != null && !intent.getBooleanExtra("alreadyDone",false)) {
         if(intent.getAction() == Intent.ACTION_SEND) {
           String txt = intent.getStringExtra(Intent.EXTRA_TEXT);
-          Pattern pat = Pattern.compile("http://goo\\.gl/maps/\\S+");
+          Log.d("GetBackPlus", "action_send: " + txt);
+          Pattern pat = Pattern.compile("https?://goo\\.gl/maps/\\S+");
           Matcher mat = pat.matcher(txt);
           if(mat.find()) {
             startWebView(mat.group());
             Log.d("GetBackPlus", "starting webview: " + mat.group());
+          }else{
+            Toast.makeText(getApplicationContext(), "map url not in text", Toast.LENGTH_LONG).show();
           }
           intent.putExtra("alreadyDone",true);
         }else if(intent.getAction() == Intent.ACTION_VIEW) {
@@ -51,7 +54,7 @@ public class GetBackPlusActivity extends Activity {
           Matcher mat = pat.matcher(intent.getDataString());
           if(mat.find()) {
             String latlng = mat.group(1);
-            EditText et = (EditText)findViewById(R.id.latlng);
+            TextView et = (TextView)findViewById(R.id.latlng);
             et.setText(latlng);
             Toast.makeText(getApplicationContext(), "loading map..", Toast.LENGTH_LONG).show();
             WebView webView = (WebView)findViewById(R.id.webview);
@@ -65,7 +68,7 @@ public class GetBackPlusActivity extends Activity {
     }
 
     public void sendTarget(View view) {
-      EditText et = (EditText)findViewById(R.id.latlng);
+      TextView et = (TextView)findViewById(R.id.latlng);
       sendLatLngToWatch(et.getText().toString());
     }
     
@@ -93,7 +96,7 @@ public class GetBackPlusActivity extends Activity {
                 Pattern pat = Pattern.compile("@([0-9.]+,[0-9.]+)");
                 Matcher mat = pat.matcher(webView.getUrl());
                 if(mat.find()) {
-                  EditText et = (EditText)findViewById(R.id.latlng);
+                  TextView et = (TextView)findViewById(R.id.latlng);
                   et.setText(mat.group(1));
                   found = true;
                 }
