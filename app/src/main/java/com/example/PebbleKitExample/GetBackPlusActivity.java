@@ -36,7 +36,7 @@ public class GetBackPlusActivity extends Activity {
     public void onResume() {
       super.onResume();
       Intent intent = getIntent();
-      if(intent != null) {
+      if(intent != null && !intent.getBooleanExtra("alreadyDone",false)) {
         if(intent.getAction() == Intent.ACTION_SEND) {
           String txt = intent.getStringExtra(Intent.EXTRA_TEXT);
           Pattern pat = Pattern.compile("http://goo\\.gl/maps/\\S+");
@@ -45,6 +45,7 @@ public class GetBackPlusActivity extends Activity {
             startWebView(mat.group());
             Log.d("GetBackPlus", "starting webview: " + mat.group());
           }
+          intent.putExtra("alreadyDone",true);
         }else if(intent.getAction() == Intent.ACTION_VIEW) {
           Pattern pat = Pattern.compile("geo:([0-9.,]+)");
           Matcher mat = pat.matcher(intent.getDataString());
@@ -52,6 +53,7 @@ public class GetBackPlusActivity extends Activity {
             EditText et = (EditText)findViewById(R.id.latlng);
             et.setText(mat.group(1));
           }
+          intent.putExtra("alreadyDone",true);
         }
       }
     }
