@@ -50,7 +50,7 @@ public class GetBackPlusActivity extends Activity {
           }
           intent.putExtra("alreadyDone",true);
         }else if(intent.getAction() == Intent.ACTION_VIEW) {
-          Pattern pat = Pattern.compile("geo:([0-9.,]+)");
+          Pattern pat = Pattern.compile("geo:([0-9.,-]+)");
           Matcher mat = pat.matcher(intent.getDataString());
           if(mat.find()) {
             String latlng = mat.group(1);
@@ -93,7 +93,7 @@ public class GetBackPlusActivity extends Activity {
               boolean found = false;
               if(webView.getUrl() != null){
                 Log.d("GetBackPlus", "after runnable:" + webView.getUrl());
-                Pattern pat = Pattern.compile("@([0-9.]+,[0-9.]+)");
+                Pattern pat = Pattern.compile("/@([0-9.-]+,[0-9.-]+)");
                 Matcher mat = pat.matcher(webView.getUrl());
                 if(mat.find()) {
                   TextView et = (TextView)findViewById(R.id.latlng);
