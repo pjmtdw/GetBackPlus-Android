@@ -50,8 +50,14 @@ public class GetBackPlusActivity extends Activity {
           Pattern pat = Pattern.compile("geo:([0-9.,]+)");
           Matcher mat = pat.matcher(intent.getDataString());
           if(mat.find()) {
+            String latlng = mat.group(1);
             EditText et = (EditText)findViewById(R.id.latlng);
-            et.setText(mat.group(1));
+            et.setText(latlng);
+            Toast.makeText(getApplicationContext(), "loading map..", Toast.LENGTH_LONG).show();
+            WebView webView = (WebView)findViewById(R.id.webview);
+            webView.setWebViewClient(new WebViewClient());
+            webView.getSettings().setJavaScriptEnabled(true);
+            webView.loadUrl("http://www.google.com/maps/search/" + latlng);
           }
           intent.putExtra("alreadyDone",true);
         }
@@ -69,8 +75,8 @@ public class GetBackPlusActivity extends Activity {
       PebbleKit.sendDataToPebble(getApplicationContext(), WATCHAPP_UUID, data);
     }
     private void startWebView(String loadUrl) {
-      Toast.makeText(getApplicationContext(), "loading url..", Toast.LENGTH_LONG).show();
-      final WebView webView = new WebView(this);
+      Toast.makeText(getApplicationContext(), "loading map..", Toast.LENGTH_LONG).show();
+      final WebView webView = (WebView)findViewById(R.id.webview);
       webView.setWebViewClient(new WebViewClient() {
         @Override
         public void onPageFinished(WebView view, String url) {
