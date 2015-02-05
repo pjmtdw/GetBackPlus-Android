@@ -6,12 +6,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.EditText;
 
 import com.getpebble.android.kit.PebbleKit;
 import com.getpebble.android.kit.util.PebbleDictionary;
 
 import java.util.UUID;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 public class GetBackPlusActivity extends Activity {
     // This value corresponds to appKeys in appinfo.json
@@ -31,8 +35,19 @@ public class GetBackPlusActivity extends Activity {
       if(intent != null) {
         if(intent.getAction() == Intent.ACTION_SEND) {
           String txt = intent.getStringExtra(Intent.EXTRA_TEXT);
-          EditText et = (EditText)findViewById(R.id.latlng);
-          et.setText(txt);
+          Pattern pat = Pattern.compile("http://goo\\.gl/maps/\\S+");
+          Matcher mat = pat.matcher(txt);
+          if(mat.find()) {
+            startWebView(mat.group());
+            Log.d("GetBackPlus", "starting webview: " + mat.group());
+          }
+        }else if(intent.getAction() == Intent.ACTION_VIEW) {
+          Pattern pat = Pattern.compile("geo:([0-9.,]+)");
+          Matcher mat = pat.matcher(intent.getDataString());
+          if(mat.find()) {
+            EditText et = (EditText)findViewById(R.id.latlng);
+            et.setText(mat.group(1));
+          }
         }
       }
     }
@@ -46,5 +61,16 @@ public class GetBackPlusActivity extends Activity {
       PebbleDictionary data = new PebbleDictionary();
       data.addString(TARGET_KEY, latlng);
       PebbleKit.sendDataToPebble(getApplicationContext(), WATCHAPP_UUID, data);
+    }
+    private void startWebView(String loadUrl) {
+      WebView webView = new WebView(this);
+      webView.setWebViewClient(new WebViewClient() {
+        @Override
+        public void onPageFinished(WebView view, String url) {
+          Log.d("GetBackPlus", "onPageFinished: " + url);
+        }
+      });
+      webView.getSettings().setJavaScriptEnabled(true);
+      webView.loadUrl(loadUrl);
     }
 } 
