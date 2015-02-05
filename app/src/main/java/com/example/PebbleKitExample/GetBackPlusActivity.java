@@ -2,25 +2,15 @@ package com.example.PebbleKitExample;
 
 import android.app.Activity;
 import android.content.Context;
-import android.location.Criteria;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.os.AsyncTask;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 import android.widget.EditText;
 
 import com.getpebble.android.kit.PebbleKit;
 import com.getpebble.android.kit.util.PebbleDictionary;
-import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.UUID;
 
 public class GetBackPlusActivity extends Activity {
@@ -31,18 +21,30 @@ public class GetBackPlusActivity extends Activity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_layout);
+      super.onCreate(savedInstanceState);
+      setContentView(R.layout.activity_layout);
+    }
+    @Override
+    public void onResume() {
+      super.onResume();
+      Intent intent = getIntent();
+      if(intent != null) {
+        if(intent.getAction() == Intent.ACTION_SEND) {
+          String txt = intent.getStringExtra(Intent.EXTRA_TEXT);
+          EditText et = (EditText)findViewById(R.id.latlng);
+          et.setText(txt);
+        }
+      }
     }
 
     public void sendTarget(View view) {
-        EditText et = (EditText)findViewById(R.id.latlng);
-        sendLatLngToWatch(et.getText().toString());
+      EditText et = (EditText)findViewById(R.id.latlng);
+      sendLatLngToWatch(et.getText().toString());
     }
     
-    public void sendLatLngToWatch(String latlng) {
-        PebbleDictionary data = new PebbleDictionary();
-        data.addString(TARGET_KEY, latlng);
-        PebbleKit.sendDataToPebble(getApplicationContext(), WATCHAPP_UUID, data);
+    private void sendLatLngToWatch(String latlng) {
+      PebbleDictionary data = new PebbleDictionary();
+      data.addString(TARGET_KEY, latlng);
+      PebbleKit.sendDataToPebble(getApplicationContext(), WATCHAPP_UUID, data);
     }
 } 
