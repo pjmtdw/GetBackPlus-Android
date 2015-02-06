@@ -16,8 +16,17 @@
     android:text="Send To Pebble"
     android:id="@+id/button"
     android:onClick="sendTarget" />
-  <WebView
+  <FrameLayout
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:id="@+id/webview" />
+    android:layout_height="fill_parent">
+    <WebView
+      android:layout_width="fill_parent"
+      android:layout_height="fill_parent"
+      android:id="@+id/webview" />
+    <com.example.PebbleKitExample.OverlayView
+      android:layout_width="fill_parent"
+      android:layout_height="fill_parent"
+      android:id="@+id/overlay" />
+  </FrameLayout>
+
 </LinearLayout>
