@@ -9,8 +9,15 @@ import android.graphics.DashPathEffect;
 import android.view.View;
 
 public class OverlayView extends View {
+  private int offsetY;
+
+  public void setOffsetY(int y){
+    offsetY = y;
+  }
+
   public OverlayView(Context c,AttributeSet a){
     super(c,a);
+    offsetY = 0;
   }
   @Override
   protected void onDraw(Canvas canvas) {
@@ -23,10 +30,10 @@ public class OverlayView extends View {
     paint.setStrokeWidth(4.5f);
     paint.setPathEffect(new DashPathEffect(new float[]{4.5f, 4.5f}, 0));
     Path path = new Path();
-    path.moveTo(width/4,height/2);
-    path.lineTo(width*0.75f,height/2);
-    path.moveTo(width/2,height/4);
-    path.lineTo(width/2,height*0.75f);
+    path.moveTo(width/4,offsetY+height/2);
+    path.lineTo(width*0.75f,offsetY+height/2);
+    path.moveTo(width/2,offsetY+height/4);
+    path.lineTo(width/2,offsetY+height*0.75f);
     canvas.drawPath(path,paint);
   }
 }
