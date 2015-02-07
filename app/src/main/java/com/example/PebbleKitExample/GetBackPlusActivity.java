@@ -96,6 +96,8 @@ public class GetBackPlusActivity extends Activity {
             }
             return true;
           } finally {
+            // TODO: maybe this is the reason that text input inside WebView loses focus.
+            //       we should consider avoid using alert() and onJsAlert() for communicating between WebView and this activity.
             result.confirm();
           }
         }
@@ -114,6 +116,21 @@ public class GetBackPlusActivity extends Activity {
           handler.postDelayed(new Runnable(){
             @Override
             public void run(){
+              String js = new StringBuilder()
+                .append("javascript:")
+                .append("head=0;tail=0;")
+                .append("try{head=document.getElementById('ml-searchbox').offsetHeight}catch(e){};")
+                .append("try{tail=document.getElementById('ml-cards-entity').offsetHeight}catch(e){};")
+                .append("alert('head:'+head+',tail:'+tail);")
+                .toString();
+              // the result of JavaScript alert() is captured by WebChromeClient.onJsAlert()
+              webView.loadUrl(js);
+              handler.postDelayed(this,5000);
+            }
+          },3000);
+          handler.postDelayed(new Runnable(){
+            @Override
+            public void run(){
               boolean found = false;
               if(webView.getUrl() != null){
                 //Log.d("GetBackPlus", "current_url:" + webView.getUrl());
@@ -122,15 +139,6 @@ public class GetBackPlusActivity extends Activity {
                 if(mat.find()) {
                   TextView et = (TextView)findViewById(R.id.latlng);
                   et.setText(mat.group(1));
-                  String js = new StringBuilder()
-                    .append("javascript:")
-                    .append("head=0;tail=0;")
-                    .append("try{head=document.getElementById('ml-searchbox').offsetHeight}catch(e){};")
-                    .append("try{tail=document.getElementById('ml-cards-entity').offsetHeight}catch(e){};")
-                    .append("alert('head:'+head+',tail:'+tail);")
-                    .toString();
-                  // the result of JavaScript alert() is captured by WebChromeClient.onJsAlert()
-                  webView.loadUrl(js);
                   found = true;
                 }
               }
