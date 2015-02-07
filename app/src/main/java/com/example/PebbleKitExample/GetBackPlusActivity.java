@@ -20,6 +20,8 @@ import com.getpebble.android.kit.util.PebbleDictionary;
 import java.lang.Runnable;
 import java.lang.StringBuilder;
 
+import java.net.URLEncoder;
+
 import java.util.UUID;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
@@ -44,13 +46,17 @@ public class GetBackPlusActivity extends Activity {
         if(intent.getAction() == Intent.ACTION_SEND) {
           String txt = intent.getStringExtra(Intent.EXTRA_TEXT);
           Log.d("GetBackPlus", "action_send: " + txt);
-          Pattern pat = Pattern.compile("https?://goo\\.gl/maps/\\S+");
+          Pattern pat = Pattern.compile("https?://\\S+");
           Matcher mat = pat.matcher(txt);
           if(mat.find()) {
             startWebView(mat.group());
             Log.d("GetBackPlus", "starting webview: " + mat.group());
           }else{
-            Toast.makeText(getApplicationContext(), "map url not in text", Toast.LENGTH_LONG).show();
+            try{
+              startWebView("http://www.google.com/maps/search/" + URLEncoder.encode(txt,"UTF-8"));
+            }catch(java.io.UnsupportedEncodingException e){
+              Toast.makeText(getApplicationContext(), "error: " + e.getMessage() , Toast.LENGTH_LONG).show();
+            }
           }
           intent.putExtra("alreadyDone",true);
         }else if(intent.getAction() == Intent.ACTION_VIEW) {
