@@ -13,3 +13,5 @@ There are two ways to set the destination:
 
 * Click any [Geo URI](http://en.wikipedia.org/wiki/Geo_URI) in the browser.
 * Click marker in Google Maps Application and click "share". 
+
+Note: geo location of the center of ther map will be send to Pebble, *not* the marker position.

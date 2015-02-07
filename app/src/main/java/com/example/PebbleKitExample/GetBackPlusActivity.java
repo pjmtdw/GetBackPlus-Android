@@ -60,11 +60,7 @@ public class GetBackPlusActivity extends Activity {
             String latlng = mat.group(1);
             TextView et = (TextView)findViewById(R.id.latlng);
             et.setText(latlng);
-            Toast.makeText(getApplicationContext(), "loading map..", Toast.LENGTH_LONG).show();
-            WebView webView = (WebView)findViewById(R.id.webview);
-            webView.setWebViewClient(new WebViewClient());
-            webView.getSettings().setJavaScriptEnabled(true);
-            webView.loadUrl("http://www.google.com/maps/search/" + latlng);
+            startWebView("http://www.google.com/maps/search/" + latlng);
           }
           intent.putExtra("alreadyDone",true);
         }
@@ -96,8 +92,7 @@ public class GetBackPlusActivity extends Activity {
               int head = Integer.parseInt(mat.group(1));
               int tail = Integer.parseInt(mat.group(2));
               OverlayView ov = (OverlayView)findViewById(R.id.overlay);
-              ov.setOffsetY((head-tail)/2);
-              ov.invalidate();
+              ov.setOffsetYAndInvalidate((head-tail)/2);
             }
             return true;
           } finally {

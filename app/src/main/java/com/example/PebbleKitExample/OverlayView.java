@@ -11,8 +11,11 @@ import android.view.View;
 public class OverlayView extends View {
   private int offsetY;
 
-  public void setOffsetY(int y){
-    offsetY = y;
+  public void setOffsetYAndInvalidate(int y){
+    if(offsetY != y) {
+      offsetY = y;
+      invalidate();
+    }
   }
 
   public OverlayView(Context c,AttributeSet a){
